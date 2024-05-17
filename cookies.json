@@ -4,7 +4,7 @@
     "value": "%252A%2506%2593%2589%25D1%25D0%25F0%2521%25C5%25D8%2505",
     "domain": "lms.uofk.edu",
     "path": "/",
-    "expires": 1721091607.716136,
+    "expires": 1721103268.112646,
     "size": 65,
     "httpOnly": false,
     "secure": true,
@@ -15,7 +15,7 @@
   },
   {
     "name": "MoodleSession",
-    "value": "th77tsso3g7m73mbonjkl8drnv",
+    "value": "rmfiaqp70so5bgo8f3rrebvidc",
     "domain": "lms.uofk.edu",
     "path": "/",
     "expires": -1,
