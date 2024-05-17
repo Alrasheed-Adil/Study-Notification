@@ -2,12 +2,20 @@ var express = require('express');
 var router = express.Router();
 const puppeteer = require('puppeteer');
 const fs = require('fs');
+require('dotenv').config();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
 (async () => {
     // Launch Puppeteer browser instance
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      args:["--disable-setuid-sandbox",
+        "--no-sandbox",
+        "--single-process",
+        "--no-zygote"
+      ],
+      executablePath: process.env.NODE_ENV === 'production' ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
+    });
     const page = await browser.newPage();
 
     // Navigate to the login page
