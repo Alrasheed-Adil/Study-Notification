@@ -38,7 +38,7 @@ router.get('/', function(req, res, next) {
     const cookies = await page.cookies();
     console.log('Cookies Updated Successfuly!');
     // Save cookies to a file
-    fs.writeFileSync('cookies.json', JSON.stringify(cookies, null, 2));
+    // fs.writeFileSync('cookies.json', JSON.stringify(cookies, null, 2));
 
     // Close the browser
     await browser.close();
