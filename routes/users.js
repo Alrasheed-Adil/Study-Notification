@@ -6,44 +6,52 @@ require('dotenv').config();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-(async () => {
-    // Launch Puppeteer browser instance
+  async (res) => {
     const browser = await puppeteer.launch({
-      args:["--disable-setuid-sandbox",
+      args: [
+        "--disable-setuid-sandbox",
         "--no-sandbox",
         "--single-process",
-        "--no-zygote"
+        "--no-zygote",
       ],
-      executablePath: process.env.NODE_ENV === 'production' ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
+      executablePath:
+        process.env.NODE_ENV === "production"
+          ? process.env.PUPPETEER_EXECUTABLE_PATH
+          : puppeteer.executablePath(),
     });
-    const page = await browser.newPage();
-
-    // Navigate to the login page
-    await page.goto('https://lms.uofk.edu/login/index.php');
-
-    // Fill in the login form
-    await page.type('#username', '11016950516');
-    await page.type('#password', 'Charlieputh22&');
-
-    // Click the login button and wait for navigation
-    await Promise.all([
-        page.waitForNavigation(),
-        page.click('#loginbtn'),
-    ]);
-
-    // Wait for the login to complete (you may need to add additional checks here)
-    await page.waitForSelector('#usernavigation');
-
-    // Retrieve cookies
-    const cookies = await page.cookies();
-    console.log('Cookies Updated Successfuly!');
-    // Save cookies to a file
-    // fs.writeFileSync('cookies.json', JSON.stringify(cookies, null, 2));
-
-    // Close the browser
-    await browser.close();
-})();
-  res.send('coookie Update Page');
+    try {
+      const page = await browser.newPage();
+  
+      await page.goto("https://developer.chrome.com/");
+  
+      // Set screen size
+      await page.setViewport({ width: 1080, height: 1024 });
+  
+      // Type into search box
+      await page.type(".search-box__input", "automate beyond recorder");
+  
+      // Wait and click on first result
+      const searchResultSelector = ".search-box__link";
+      await page.waitForSelector(searchResultSelector);
+      await page.click(searchResultSelector);
+  
+      // Locate the full title with a unique string
+      const textSelector = await page.waitForSelector(
+        "text/Customize and automate"
+      );
+      const fullTitle = await textSelector.evaluate((el) => el.textContent);
+  
+      // Print the full title
+      const logStatement = `The title of this blog post is ${fullTitle}`;
+      console.log(logStatement);
+      res.send(logStatement);
+    } catch (e) {
+      console.error(e);
+      res.send(`Something went wrong while running Puppeteer: ${e}`);
+    } finally {
+      await browser.close();
+    }
+  };
 });
 
 module.exports = router;
