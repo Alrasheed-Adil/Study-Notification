@@ -1,0 +1,31 @@
+[
+  {
+    "name": "MOODLEID1_",
+    "value": "%252A%2506%2593%2589%25D1%25D0%25F0%2521%25C5%25D8%2505",
+    "domain": "lms.uofk.edu",
+    "path": "/",
+    "expires": 1721091607.716136,
+    "size": 65,
+    "httpOnly": false,
+    "secure": true,
+    "session": false,
+    "priority": "Medium",
+    "sameParty": false,
+    "sourceScheme": "Secure"
+  },
+  {
+    "name": "MoodleSession",
+    "value": "th77tsso3g7m73mbonjkl8drnv",
+    "domain": "lms.uofk.edu",
+    "path": "/",
+    "expires": -1,
+    "size": 39,
+    "httpOnly": false,
+    "secure": true,
+    "session": true,
+    "sameSite": "None",
+    "priority": "Medium",
+    "sameParty": false,
+    "sourceScheme": "Secure"
+  }
+]
