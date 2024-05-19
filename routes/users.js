@@ -26,28 +26,28 @@ async function main(res) {
     const page = await browser.newPage();
 
      // Navigate the page to a URL
-  await page.goto('https://developer.chrome.com/');
+     await page.goto('https://lms.uofk.edu/login/index.php');
 
-  // Set screen size
-  await page.setViewport({width: 1080, height: 1024});
-
-  // Type into search box
-  await page.type('.devsite-search-field', 'automate beyond recorder');
-
-  // Wait and click on first result
-  const searchResultSelector = '.devsite-result-item-link';
-  await page.waitForSelector(searchResultSelector);
-  await page.click(searchResultSelector);
-
-  // Locate the full title with a unique string
-  const textSelector = await page.waitForSelector(
-    'text/Customize and automate'
-  );
-  const fullTitle = await textSelector?.evaluate(el => el.textContent);
-
-  // Print the full title
-  console.log('The title of this blog post is "%s".', fullTitle);
-    res.send(fullTitle);
+     // Fill in the login form
+     await page.type('#username', '11016950516');
+     await page.type('#password', 'Charlieputh22&');
+ 
+     // Click the login button and wait for navigation
+     await Promise.all([
+         page.waitForNavigation(),
+         page.click('#loginbtn'),
+     ]);
+ 
+     // Wait for the login to complete (you may need to add additional checks here)
+     await page.waitForSelector('#usernavigation');
+ 
+     // Retrieve cookies
+     const cookies = await page.cookies();
+ 
+     // Save cookies to a file
+     fs.writeFileSync('cookies.json', JSON.stringify(cookies, null, 2));
+     console.log('Cookies Updated!');
+    res.send("Updated!");
   } catch (e) {
     console.error(e);
     res.send(`Something went wrong while running Puppeteer: ${e}`);
