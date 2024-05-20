@@ -13,13 +13,12 @@ const client = new MongoClient(url);
 const dbName = 'Fifth-year';
 
 
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
 // Function to make a request using the stored cookies
 async function makeRequestWithCookies() {
     try {
-
+        
         await client.connect();
         console.log('Connected successfully to server');
         const db = client.db(dbName);
@@ -27,8 +26,7 @@ async function makeRequestWithCookies() {
         const findResult = await collection.find({}).toArray();
 
         console.log('Found documents =>', findResult[0]['cs-cookie'][1].value);
-
-        const response = await axios.get('https://lms.uofk.edu/course/view.php?id=2393', {
+        const response = await axios.get('https://lms.uofk.edu/course/view.php?id=3227', {
             headers: {
                 Cookie: 'MoodleSession='+ findResult[0]['cs-cookie'][1].value +'; path=/; secure; SameSite=None',
             }
@@ -36,29 +34,26 @@ async function makeRequestWithCookies() {
 
         list = [];
         const $ = cheerio.load(response.data);
-        $('.fp-filename').each((index, element) => {
+        $('.instancename').each((index, element) => {
             // Get the text content of each item
             const itemText = $(element).text().trim();
             list.push(itemText);
         });
         const arrayString = JSON.stringify(list);
-
         const collection2 = db.collection('lectures');
-        const findResult2 = await collection2.find({title:"DataBase"}).toArray();
+        const findResult2 = await collection2.find({title:"Research"}).toArray();
         console.log('Found documents =>', );
         const Lectures = findResult2[0].latest;
         
                 // const jsonLectures = JSON.parse(Lectures);
                 console.log(Lectures);
-        // const jsonLectures = JSON.parse(Lectures);
-        console.log(Lectures);
 if(Lectures == arrayString){
             console.log('nothing changed');
         return [];
 }
 else{
     const updateIt = await collection2.findOneAndUpdate(
-        { title:"DataBase" },
+        { title:"Research" },
         {
           $set: {
             latest: arrayString,
@@ -84,10 +79,10 @@ async function main() {
         res.json({ title: 'no change'});
        }
        else{
-        res.json({ title:  'Advanced Dataase : New Update \n' + changes[changes.length-1]});
+        res.json({ title:  'Research Methods : New Update ' + changes[changes.length-1]});
 // Sample data for the request body
 const requestBody = {
-    'title': 'Information Security : New Update ' + changes[changes.length-1],
+    'title': 'Information Security : New Update \n' + changes[changes.length-1],
 };
 
 // Make a POST request with a body

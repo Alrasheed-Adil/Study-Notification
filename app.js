@@ -6,6 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var researchRouter = require('./routes/Research');
 var securityRouter = require('./routes/security');
 var algorithmRouter = require('./routes/algorithm');
 var DataBaseRouter = require('./routes/DataBase');
@@ -29,6 +30,7 @@ app.use('/GetAlgorithm', algorithmRouter);
 app.use('/GetDataBase', DataBaseRouter);
 app.use('/GetParallel', parallelRouter);
 app.use('/UpdateCookie', usersRouter);
+app.use('/GetResearch', researchRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

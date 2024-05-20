@@ -4,6 +4,15 @@ var router = express.Router();
 const fs = require('fs');
 const axios = require('axios');
 const cheerio = require('cheerio');
+const { MongoClient } = require('mongodb');
+
+
+// Connection URL
+const url = 'mongodb+srv://alrasheed:charlieputh22@cluster0.lxbtg3b.mongodb.net/';
+const client = new MongoClient(url);
+
+// Database Name
+const dbName = 'Fifth-year';
 
 
 
@@ -12,11 +21,15 @@ router.get('/', function(req, res, next) {
 // Function to make a request using the stored cookies
 async function makeRequestWithCookies() {
     try {
-        const data = fs.readFileSync('cookies.json', 'utf8');
-        const jsonData = JSON.parse(data);
+        await client.connect();
+        console.log('Connected successfully to server');
+        const db = client.db(dbName);
+        const collection = db.collection('cookies');
+        const findResult = await collection.find({}).toArray();
+        console.log('Found documents =>', findResult[0]['cs-cookie'][1].value);
         const response = await axios.get('https://lms.uofk.edu/course/view.php?id=2390', {
             headers: {
-                Cookie: 'MoodleSession='+ jsonData[1].value+'; path=/; secure; SameSite=None',
+                Cookie: 'MoodleSession='+ findResult[0]['cs-cookie'][1].value+'; path=/; secure; SameSite=None',
             }
         });
 
@@ -31,7 +44,12 @@ async function makeRequestWithCookies() {
 
 // Write the array data to a file
 
-const Lectures = fs.readFileSync('Security.json', 'utf8');
+
+const collection2 = db.collection('lectures');
+const findResult2 = await collection2.find({title:"Security"}).toArray();
+console.log('Found documents =>', );
+const Lectures = findResult2[0].latest;
+
         // const jsonLectures = JSON.parse(Lectures);
         console.log(Lectures);
 if(Lectures == arrayString){
@@ -39,14 +57,14 @@ if(Lectures == arrayString){
         return [];
 }
 else{
-    fs.writeFile('Security.json', arrayString, 'utf8', (err) => {
-        if (err) {
-            console.error('Error writing to file:', err);
-            return;
+    const updateIt = await collection2.findOneAndUpdate(
+        { title:"Security" },
+        {
+          $set: {
+            latest: arrayString,
+          },
         }
-        console.log('Array data saved to file successfully.');
-        
-    });
+      )
     return list;
 }
 
